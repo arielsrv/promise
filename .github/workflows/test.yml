@@ -11,6 +11,6 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: '${{ matrix.go-version }}'
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Test
         run: go test -race -count 100 ./... -coverprofile .testCoverage.txt
