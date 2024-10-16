@@ -1,6 +1,7 @@
 package promise
 
 import (
+	"github.com/alitto/pond"
 	"github.com/panjf2000/ants/v2"
 	conc "github.com/sourcegraph/conc/pool"
 )
@@ -30,6 +31,12 @@ func FromConcPool(p *conc.Pool) Pool {
 }
 
 func FromAntsPool(p *ants.Pool) Pool {
+	return wrapFunc(func(f func()) {
+		p.Submit(f)
+	})
+}
+
+func FromAlittoPool(p *pond.WorkerPool) Pool {
 	return wrapFunc(func(f func()) {
 		p.Submit(f)
 	})

@@ -1,7 +1,7 @@
 # PROMISE
-[![Go Report Card](https://goreportcard.com/badge/github.com/chebyrash/promise)](https://goreportcard.com/report/github.com/chebyrash/promise)
-[![Build Status](https://github.com/chebyrash/promise/actions/workflows/test.yml/badge.svg)](https://github.com/chebyrash/promise/actions)
-[![Go Reference](https://pkg.go.dev/badge/github.com/chebyrash/promise.svg)](https://pkg.go.dev/github.com/chebyrash/promise)
+[![Go Report Card](https://goreportcard.com/badge/github.com/arielsrv/promise)](https://goreportcard.com/report/github.com/arielsrv/promise)
+[![Build Status](https://github.com/arielsrv/promise/actions/workflows/test.yml/badge.svg)](https://github.com/arielsrv/promise/actions)
+[![Go Reference](https://pkg.go.dev/badge/github.com/arielsrv/promise.svg)](https://pkg.go.dev/github.com/arielsrv/promise)
 
 ## Introduction
 
@@ -17,7 +17,7 @@
 
 ## Install
 
-    $ go get github.com/chebyrash/promise
+    $ go get github.com/arielsrv/promise
 
 ## Quickstart
 ```go
@@ -29,7 +29,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/chebyrash/promise"
+	"github.com/arielsrv/promise"
 )
 
 func main() {
@@ -90,7 +90,7 @@ package main
 import (
 	"context"
 
-	"github.com/chebyrash/promise"
+	"github.com/arielsrv/promise"
 )
 
 func main() {

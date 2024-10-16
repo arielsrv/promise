@@ -3,6 +3,7 @@ package promise
 import (
 	"context"
 	"errors"
+	"github.com/alitto/pond"
 	"testing"
 	"time"
 
@@ -44,6 +45,13 @@ func TestNewWithPool(t *testing.T) {
 				antsPool, err := ants.NewPool(0)
 				require.NoError(t, err)
 				return FromAntsPool(antsPool)
+			}(),
+		},
+		{
+			name: "alitto",
+			pool: func() Pool {
+				alittoPool := pond.New(0, 10)
+				return FromAlittoPool(alittoPool)
 			}(),
 		},
 	}
