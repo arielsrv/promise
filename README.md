@@ -13,7 +13,8 @@
 - Goroutine pool support
 	- [sourcegraph/conc](https://github.com/sourcegraph/conc)
 	- [panjf2000/ants](https://github.com/panjf2000/ants)
-	- Your own!
+    - [alitto/pond](https://github.com/alitto/pond)
+	- [Your own!]
 
 ## Install
 

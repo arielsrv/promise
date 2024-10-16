@@ -6,9 +6,7 @@ import (
 	conc "github.com/sourcegraph/conc/pool"
 )
 
-var (
-	defaultPool = newDefaultPool()
-)
+var defaultPool = newDefaultPool()
 
 type Pool interface {
 	Go(f func())
@@ -32,7 +30,7 @@ func FromConcPool(p *conc.Pool) Pool {
 
 func FromAntsPool(p *ants.Pool) Pool {
 	return wrapFunc(func(f func()) {
-		p.Submit(f)
+		_ = p.Submit(f)
 	})
 }
 

@@ -3,10 +3,10 @@ package promise
 import (
 	"context"
 	"errors"
-	"github.com/alitto/pond"
 	"testing"
 	"time"
 
+	"github.com/alitto/pond"
 	"github.com/panjf2000/ants/v2"
 	conc "github.com/sourcegraph/conc/pool"
 	"github.com/stretchr/testify/require"
@@ -26,8 +26,8 @@ func TestNew(t *testing.T) {
 
 func TestNewWithPool(t *testing.T) {
 	tests := []struct {
-		name string
 		pool Pool
+		name string
 	}{
 		{
 			name: "default",

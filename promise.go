@@ -6,7 +6,7 @@ import (
 	"sync"
 )
 
-// Promise represents the eventual completion (or failure) of an asynchronous operation and its resulting value
+// Promise represents the eventual completion (or failure) of an asynchronous operation and its resulting value.
 type Promise[T any] struct {
 	value *T
 	err   error
@@ -138,7 +138,7 @@ func (p *Promise[T]) handlePanic() {
 	}
 }
 
-// All resolves when all promises have resolved, or rejects immediately upon any of the promises rejecting
+// All resolves when all promises have resolved, or rejects immediately upon any of the promises rejecting.
 func All[T any](
 	ctx context.Context,
 	promises ...*Promise[T],
@@ -160,7 +160,6 @@ func AllWithPool[T any](
 		errsChan := make(chan error, len(promises))
 
 		for idx, p := range promises {
-			idx := idx
 			_ = ThenWithPool(p, ctx, func(data T) (T, error) {
 				resultsChan <- tuple[T, int]{_1: data, _2: idx}
 				return data, nil
@@ -172,7 +171,7 @@ func AllWithPool[T any](
 		}
 
 		results := make([]T, len(promises))
-		for idx := 0; idx < len(promises); idx++ {
+		for range len(promises) {
 			select {
 			case result := <-resultsChan:
 				results[result._2] = result._1
@@ -185,7 +184,7 @@ func AllWithPool[T any](
 	}, pool)
 }
 
-// Race resolves or rejects as soon as any one of the promises resolves or rejects
+// Race resolves or rejects as soon as any one of the promises resolves or rejects.
 func Race[T any](
 	ctx context.Context,
 	promises ...*Promise[T],
