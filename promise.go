@@ -47,16 +47,16 @@ func NewWithPool[T any](
 }
 
 func Then[A, B any](
-	p *Promise[A],
 	ctx context.Context,
+	p *Promise[A],
 	resolve func(A) (B, error),
 ) *Promise[B] {
-	return ThenWithPool(p, ctx, resolve, defaultPool)
+	return ThenWithPool(ctx, p, resolve, defaultPool)
 }
 
 func ThenWithPool[A, B any](
-	p *Promise[A],
 	ctx context.Context,
+	p *Promise[A],
 	resolve func(A) (B, error),
 	pool Pool,
 ) *Promise[B] {
@@ -78,16 +78,16 @@ func ThenWithPool[A, B any](
 }
 
 func Catch[T any](
-	p *Promise[T],
 	ctx context.Context,
+	p *Promise[T],
 	reject func(err error) error,
 ) *Promise[T] {
-	return CatchWithPool(p, ctx, reject, defaultPool)
+	return CatchWithPool(ctx, p, reject, defaultPool)
 }
 
 func CatchWithPool[T any](
-	p *Promise[T],
 	ctx context.Context,
+	p *Promise[T],
 	reject func(err error) error,
 	pool Pool,
 ) *Promise[T] {
@@ -160,11 +160,11 @@ func AllWithPool[T any](
 		errsChan := make(chan error, len(promises))
 
 		for idx, p := range promises {
-			_ = ThenWithPool(p, ctx, func(data T) (T, error) {
+			_ = ThenWithPool(ctx, p, func(data T) (T, error) {
 				resultsChan <- tuple[T, int]{_1: data, _2: idx}
 				return data, nil
 			}, pool)
-			_ = CatchWithPool(p, ctx, func(err error) error {
+			_ = CatchWithPool(ctx, p, func(err error) error {
 				errsChan <- err
 				return err
 			}, pool)
@@ -206,11 +206,11 @@ func RaceWithPool[T any](
 		errsChan := make(chan error, len(promises))
 
 		for _, p := range promises {
-			_ = ThenWithPool(p, ctx, func(data T) (T, error) {
+			_ = ThenWithPool(ctx, p, func(data T) (T, error) {
 				valsChan <- data
 				return data, nil
 			}, pool)
-			_ = CatchWithPool(p, ctx, func(err error) error {
+			_ = CatchWithPool(ctx, p, func(err error) error {
 				errsChan <- err
 				return err
 			}, pool)

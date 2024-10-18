@@ -18,7 +18,7 @@ var (
 )
 
 func TestNew(t *testing.T) {
-	p := New(func(resolve func(any), reject func(error)) {
+	p := New(func(resolve func(any), _ func(error)) {
 		resolve(nil)
 	})
 	require.NotNil(t, p)
@@ -58,7 +58,7 @@ func TestNewWithPool(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			p := NewWithPool(func(resolve func(string), reject func(error)) {
+			p := NewWithPool(func(resolve func(string), _ func(error)) {
 				resolve(test.name)
 			}, test.pool)
 
@@ -71,13 +71,13 @@ func TestNewWithPool(t *testing.T) {
 }
 
 func TestPromise_Then(t *testing.T) {
-	p1 := New(func(resolve func(string), reject func(error)) {
+	p1 := New(func(resolve func(string), _ func(error)) {
 		resolve("Hello, ")
 	})
-	p2 := Then(p1, ctx, func(data string) (string, error) {
+	p2 := Then(ctx, p1, func(data string) (string, error) {
 		return data + "world!", nil
 	})
-	p3 := Then(p2, ctx, func(_ string) (string, error) {
+	p3 := Then(ctx, p2, func(_ string) (string, error) {
 		return "", errExpected
 	})
 
@@ -96,7 +96,7 @@ func TestPromise_Then(t *testing.T) {
 }
 
 func TestPromise_Catch(t *testing.T) {
-	p1 := New(func(resolve func(any), reject func(error)) {
+	p1 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
 
@@ -107,10 +107,10 @@ func TestPromise_Catch(t *testing.T) {
 }
 
 func TestPromise_Panic(t *testing.T) {
-	p1 := New(func(resolve func(any), reject func(error)) {
+	p1 := New(func(_ func(any), _ func(error)) {
 		panic("random error")
 	})
-	p2 := New(func(resolve func(any), reject func(error)) {
+	p2 := New(func(_ func(any), _ func(error)) {
 		panic(errExpected)
 	})
 
@@ -126,13 +126,13 @@ func TestPromise_Panic(t *testing.T) {
 }
 
 func TestAll_Happy(t *testing.T) {
-	p1 := New(func(resolve func(string), reject func(error)) {
+	p1 := New(func(resolve func(string), _ func(error)) {
 		resolve("one")
 	})
-	p2 := New(func(resolve func(string), reject func(error)) {
+	p2 := New(func(resolve func(string), _ func(error)) {
 		resolve("two")
 	})
-	p3 := New(func(resolve func(string), reject func(error)) {
+	p3 := New(func(resolve func(string), _ func(error)) {
 		resolve("three")
 	})
 
@@ -145,13 +145,13 @@ func TestAll_Happy(t *testing.T) {
 }
 
 func TestAll_ContainsRejected(t *testing.T) {
-	p1 := New(func(resolve func(string), reject func(error)) {
+	p1 := New(func(resolve func(string), _ func(error)) {
 		resolve("one")
 	})
-	p2 := New(func(resolve func(string), reject func(error)) {
+	p2 := New(func(_ func(string), reject func(error)) {
 		reject(errExpected)
 	})
-	p3 := New(func(resolve func(string), reject func(error)) {
+	p3 := New(func(resolve func(string), _ func(error)) {
 		resolve("three")
 	})
 
@@ -164,13 +164,13 @@ func TestAll_ContainsRejected(t *testing.T) {
 }
 
 func TestAll_OnlyRejected(t *testing.T) {
-	p1 := New(func(resolve func(any), reject func(error)) {
+	p1 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
-	p2 := New(func(resolve func(any), reject func(error)) {
+	p2 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
-	p3 := New(func(resolve func(any), reject func(error)) {
+	p3 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
 
@@ -183,11 +183,11 @@ func TestAll_OnlyRejected(t *testing.T) {
 }
 
 func TestRace_Happy(t *testing.T) {
-	p1 := New(func(resolve func(string), reject func(error)) {
+	p1 := New(func(resolve func(string), _ func(error)) {
 		time.Sleep(time.Millisecond * 100)
 		resolve("faster")
 	})
-	p2 := New(func(resolve func(string), reject func(error)) {
+	p2 := New(func(resolve func(string), _ func(error)) {
 		time.Sleep(time.Millisecond * 500)
 		resolve("slower")
 	})
@@ -201,11 +201,11 @@ func TestRace_Happy(t *testing.T) {
 }
 
 func TestRace_ContainsRejected(t *testing.T) {
-	p1 := New(func(resolve func(any), reject func(error)) {
+	p1 := New(func(resolve func(any), _ func(error)) {
 		time.Sleep(time.Millisecond * 100)
 		resolve(nil)
 	})
-	p2 := New(func(resolve func(any), reject func(error)) {
+	p2 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
 
@@ -218,10 +218,10 @@ func TestRace_ContainsRejected(t *testing.T) {
 }
 
 func TestRace_OnlyRejected(t *testing.T) {
-	p1 := New(func(resolve func(any), reject func(error)) {
+	p1 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
-	p2 := New(func(resolve func(any), reject func(error)) {
+	p2 := New(func(_ func(any), reject func(error)) {
 		reject(errExpected)
 	})
 
